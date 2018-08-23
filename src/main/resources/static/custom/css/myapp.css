@@ -1,0 +1,199 @@
+.my-content-header {
+    padding-bottom: 12px;border: solid 1px #e6e6e6;
+    background: #F4F4F4;
+}
+
+.my-box-footer{
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.MyTable{
+    width: 100%;
+    border-top-width: 1px;
+    border-right-width: 0px;
+    border-bottom-width: 0px;
+    border-left-width: 1px;
+    border-top-style: solid;
+    border-right-style: solid;
+    border-bottom-style: solid;
+    border-left-style: solid;
+    border-top-color: #D7D7D7;
+    border-right-color: #D7D7D7;
+    border-bottom-color: #D7D7D7;
+    border-left-color: #D7D7D7;
+}
+
+.MyTable td{
+    height: 50px;
+    border-top-width: 0px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 0px;
+    border-top-style: solid;
+    border-right-style: solid;
+    border-bottom-style: solid;
+    border-left-style: solid;
+    border-top-color: #D7D7D7;
+    border-right-color: #D7D7D7;
+    border-bottom-color: #D7D7D7;
+    border-left-color: #D7D7D7;
+    font-size: 14px;
+    text-align: center;
+    /*font-weight: bold;*/
+    word-break:   break-all;
+}
+
+.MyTableSmall{
+    width: 100%;
+    border-top-width: 1px;
+    border-right-width: 0px;
+    border-bottom-width: 0px;
+    border-left-width: 1px;
+    border-top-style: solid;
+    border-right-style: solid;
+    border-bottom-style: solid;
+    border-left-style: solid;
+    border-top-color: #D7D7D7;
+    border-right-color: #D7D7D7;
+    border-bottom-color: #D7D7D7;
+    border-left-color: #D7D7D7;
+}
+
+.MyTableSmall td{
+    height: 30px;
+    border-top-width: 0px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 0px;
+    border-top-style: solid;
+    border-right-style: solid;
+    border-bottom-style: solid;
+    border-left-style: solid;
+    border-top-color: #D7D7D7;
+    border-right-color: #D7D7D7;
+    border-bottom-color: #D7D7D7;
+    border-left-color: #D7D7D7;
+    font-size: 14px;
+    text-align: center;
+    /*font-weight: bold;*/
+    word-break:   break-all;
+}
+
+
+.file {
+    position: relative;
+    display: inline-block;
+    padding: 4px 12px;
+    overflow: hidden;
+    color: #545454;
+    text-decoration: none;
+    text-indent: 0;
+}
+.file input {
+    position: absolute;
+    font-size: 100px;
+    right: 0;
+    top: 0;
+    opacity: 0;
+}
+
+.my-small-box{
+    border-radius: 5px
+}
+
+.my-small-box-footer{
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+
+.right_window{
+    display: none;
+    width:0px;
+    position:absolute;
+    right:0px;
+    top:50px;
+    bottom: 0px;
+    background: whitesmoke;
+    z-index: 100;
+    box-shadow: 1px 1px 5px 5px #c3c3c3;
+} 
+
+/*
+ * 子页面面包屑标题样式
+ */
+.my-view-title{
+    font-size: 20px;font-weight:normal;
+    color: rgb(90, 89, 89);
+}
+.my-view-title2{
+    font-size: 18px;font-weight:normal;
+    color: rgb(90, 89, 89);
+}
+
+.qukuai{
+width: 100%;height: 40px;margin-bottom: 10px;border-left: solid 5px #E3E3E3;line-height: 40px;
+}
+
+.qukuaitext{
+    float: left;font-size: 15px;height: 40px;line-height: 40px;margin-left: 5px;
+}
+
+
+.block-parent h3 {
+    font-size: 30px;font-weight: bold;
+}
+.block-parent h4 {
+    font-size: 20px;
+}
+.block{
+    float: left;
+    height: 100px;
+    padding: 10px;
+}
+.myDescRow{
+    padding: 5px;overflow-y:scroll; overflow-x:scroll;overflow:auto;margin: 1px;border: dotted 2px #d2d2d2;height: 300px; margin-bottom: 10px;
+}
+
+.dataListTable{
+    width: 100%;font-size: 12px;
+}
+
+.dataListTable td{
+    padding: 5px;
+}
+
+.mytext{
+    width: 100%;height: 300px;border: dotted 1px #cdcdcd;resize:none
+}
+
+.myselectli{
+    height: 35px;   
+    padding-left: 5px;
+    line-height: 35px;
+    font-size: 12px;
+}
+
+.myleft_to_right_div{
+    height: 400px;border: dotted 1px #cdcdcd;padding:0px;overflow-y:scroll; overflow-x:scroll;overflow:auto;
+}
+
+.myTableOperBtn{
+    font-size: 12px;
+    margin-top: -5px;
+    margin-bottom: -5px;
+}
+
+.myBorderTitleDiv .title{
+    padding: 5px;
+    position:relative;
+    top:-25px;
+    left: 10px;
+    font-weight: bold;
+    text-align: center;
+    background: white;
+}
+
+.myerror {
+    color: red;
+}

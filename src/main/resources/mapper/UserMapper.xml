@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lister.itms.dao.mapper.UserMapper">
+    <resultMap id="BaseResultMap" type="com.lister.itms.dao.entity.UserDO">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <id column="login_name" property="loginName" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="head_image" property="headImage" jdbcType="VARCHAR"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="wechat" property="wechat" jdbcType="VARCHAR"/>
+        <result column="remarks" property="remarks" jdbcType="VARCHAR"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="create_date" property="createDate" jdbcType="TIMESTAMP"/>
+        <result column="is_deleted" property="isDeleted" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, login_name, password, name,head_image, email, phone, wechat, remarks,address, create_date
+  </sql>
+
+    <select id="getById" resultMap="BaseResultMap">
+        SELECT 
+        <include refid="Base_Column_List"/>
+        from sys_user
+        WHERE id=#{id}
+    </select>
+
+    <select id="getAllUser" resultMap="BaseResultMap">
+          SELECT name, id from sys_user
+        WHERE is_deleted = 'N'
+    </select>
+
+    <select id="getUserByProcessRole" parameterType="java.lang.String" resultMap="BaseResultMap">
+         SELECT name, id from sys_user
+        WHERE is_deleted = 'N' 
+    </select>
+    
+    <select id="getUserByLoginName" resultMap="BaseResultMap" parameterType="com.lister.itms.dao.entity.UserDO">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_user u 
+        where u.login_name = #{loginName,jdbcType=VARCHAR}
+          and u.is_deleted = 'N'
+    </select>
+    
+    <select id="getUserByLoginNameAndPwd" resultMap="BaseResultMap" parameterType="com.lister.itms.dao.entity.UserDO">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_user u
+        where u.login_name = #{loginName,jdbcType=VARCHAR}
+        and u.password = #{password,jdbcType=VARCHAR}
+        and u.is_deleted = 'N'
+    </select>
+    
+    <update id="updateUserStatus" parameterType="com.lister.itms.dao.entity.UserDO">
+    UPDATE sys_user
+    SET is_deleted = 'Y'
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+    <insert id="insert" parameterType="com.lister.itms.dao.entity.UserDO" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+    insert into sys_user (login_name, 
+      password, name,head_image, email, 
+      phone, wechat, remarks, create_date,address,is_deleted
+      )
+    values ( #{loginName,jdbcType=VARCHAR}, 
+      #{password,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},#{headImage,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+      #{phone,jdbcType=VARCHAR}, #{wechat, jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP},
+      #{address,jdbcType=VARCHAR},'N'      
+      )
+  </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.lister.itms.dao.entity.UserDO">
+        update sys_user
+        <set>
+            <if test="password != null">
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="headImage != null">
+                head_image = #{headImage,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                email = #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                phone = #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="wechat != null">
+                wechat = #{wechat,jdbcType=VARCHAR},
+            </if>
+            <if test="remarks != null">
+                remarks = #{remarks,jdbcType=VARCHAR},
+            </if>
+            <if test="createDate != null">
+                create_date = #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="address != null">
+                address = #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="loginName != null">
+                login_name = #{loginName,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <select id="listPage" parameterType="com.lister.itms.dao.entity.UserDO" resultMap="BaseResultMap">
+        SELECT
+        su.*,
+        (SELECT group_concat(sr.role_name) FROM sys_role sr,sys_role_user sru WHERE sr.role_id = sru.role_id AND sru.user_id = su.id) AS roleName,
+        (SELECT group_concat(ip.product_name) FROM itms_product ip,sys_product_user spu WHERE ip.id = spu.product_id AND spu.user_id = su.id and ip.is_deleted = 'N') AS productName,
+        (SELECT group_concat(sc.config_value) FROM sys_config sc,sys_process_user spu2 WHERE sc.config_key = spu2.process_role AND spu2.user_id = su.id
+        AND sc.config_type = 'ProcessRole' AND sc.state = 'Y') AS processRoleName
+        FROM sys_user su
+        where su.is_deleted = 'N'
+        and (su.name like concat(concat('%',#{queryKeyword}),'%')
+            OR
+            su.login_name like concat(concat('%',#{queryKeyword}),'%')
+            OR
+            su.phone like concat(concat('%',#{queryKeyword}),'%')
+            )
+    </select>
+
+    <select id="listUserActityNumByDate" resultType="com.lister.itms.vo.UserFrequencyVo"
+            parameterType="java.lang.String">
+        SELECT u.login_name AS userName,count(h.dates) as activityNum FROM sys_user u LEFT JOIN (select o.user,DATE_FORMAT( o.log_time, '%Y-%m-%d') as dates from sys_log o) h ON u.id = h.user
+         AND h.dates = #{date}
+        WHERE u.is_deleted = 'N'
+        GROUP BY u.login_name
+    </select>
+    
+</mapper>
+    
+         

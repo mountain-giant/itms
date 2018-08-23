@@ -1,0 +1,34 @@
+一个操作完成提示框的插件
+关于它的使用。
+（1）、引入js和css 
+<link href="~/Content/toastr/toastr.css" rel="stylesheet" />
+<script src="~/Content/toastr/toastr.min.js"></script>
+（2）、js初始化
+<script type="text/javascript">
+  toastr.options.positionClass = 'toast-bottom-right';
+ </script>
+将这个属性值设置为不同的值就能让提示信息显示在不同的位置，如toast-bottom-right表示下右、toast-bottom-center表示下中、toast-top-center表示上中等，更过位置信息请查看文档。
+（3）、使用
+//初始化编辑按钮
+$("#btn_edit").click(function () {
+   var arrselections = $("#tb_departments").bootstrapTable('getSelections');
+   if (arrselections.length > 1) {
+    toastr.warning('只能选择一行进行编辑');
+ 
+    return;
+   }
+   if (arrselections.length <= 0) {
+    toastr.warning('请选择有效数据');
+    return;
+   }
+    
+   $('#myModal').modal();
+  });
+使用起来就如下一句：
+toastr.warning('只能选择一行进行编辑');
+是不是很简单~~这里的有四种方法分别对应四种不同颜色的提示框。
+toastr.success('提交数据成功');
+toastr.error('Error');
+toastr.warning('只能选择一行进行编辑');
+toastr.info('info');
+分别对应上图中的四种颜色的提示框。

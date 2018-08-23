@@ -1,0 +1,14 @@
+百度的Echarts图像报表插件
+js->
+    echarts.common.min.js   包含常用的图表组件折 柱 饼 散点 图例工具栏 标注/线/域数据区域缩放
+    echarts.js              包含所有图表组件的源码，常见的警告和错误提示
+    echarts.min.js          包含所有图表组件
+    echarts.simple.min.js   只包含基础图表 折 柱 饼
+    
+theme->
+    dark.js                 深色主题
+    infographic.js          信息图表
+    macarons.js             马卡龙主题
+    roma.js		            罗马风格主题	                                              
+    shine.js		        高亮主题	
+    vintage.js              古董风格主题

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lister.itms.dao.mapper.RoleMapper">
+    <resultMap id="BaseResultMap" type="com.lister.itms.dao.entity.RoleDO">
+        <id column="role_id" property="roleId" jdbcType="BIGINT"/>
+        <result column="role_name" property="roleName" jdbcType="VARCHAR"/>
+        <result column="role_desc" property="roleDesc" jdbcType="VARCHAR"/>
+        <result column="user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="create_date" property="createDate" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        role_id, role_name,role_desc, user_id, create_date
+      </sql>
+    <select id="getAll" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        sr.*
+        <if test="userId != null">
+            ,CASE WHEN sru.user_id IS NOT NULL THEN TRUE ELSE FALSE END AS ishave
+        </if>
+        from sys_role sr
+        <if test="userId != null">
+            LEFT JOIN sys_role_user sru ON sru.role_id = sr.role_id AND sru.user_id = #{userId}
+        </if>
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from sys_role
+    where role_id = #{roleId,jdbcType=BIGINT}
+  </delete>
+    <insert id="insert" parameterType="com.lister.itms.dao.entity.RoleDO" useGeneratedKeys="true" keyColumn="role_id"
+            keyProperty="roleId">
+    insert into sys_role (role_name,role_desc, user_id, 
+      create_date)
+    values ( #{roleName,jdbcType=VARCHAR},#{roleDesc,jdbcType=VARCHAR}, #{userId,jdbcType=BIGINT},
+      #{createDate,jdbcType=TIMESTAMP})
+  </insert>
+    <update id="updateByPrimaryKey" parameterType="com.lister.itms.dao.entity.RoleDO">
+    update sys_role
+    set role_name = #{roleName,jdbcType=VARCHAR},
+    role_desc = #{roleDesc}
+    where role_id = #{roleId,jdbcType=BIGINT}
+  </update>
+    <select id="isRoleDownUser" parameterType="com.lister.itms.dao.entity.RoleDO" resultType="java.lang.Long">
+        SELECT count(u.user_id) FROM sys_role_user u WHERE u.role_id = #{roleId,jdbcType=BIGINT}
+    </select>
+
+    <select id="listPage" parameterType="com.lister.itms.dao.entity.RoleDO" resultMap="BaseResultMap">
+        select r.role_id,r.role_name,u.name as name,r.create_date
+        from sys_role r
+        inner join sys_user u on r.user_id = u.id
+        <where>
+            <if test="roleName != null and roleName != ''">
+                AND r.role_name like concat(concat('%',#{roleName}),'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="getRoleDownUserCount" resultType="java.util.HashMap">
+        SELECT r.role_name as rolename,count(ru.user_id) as nums FROM sys_role_user ru
+        RIGHT JOIN sys_role r on r.role_id = ru.role_id
+        GROUP BY r.role_name
+    </select>
+
+    <select id="getRoleByUser" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        SELECT r.role_id, r.role_name ,r.role_desc
+        FROM sys_role r 
+        INNER JOIN sys_role_user u ON r.role_id = u.role_id
+        WHERE u.user_id = #{userId}
+    </select>
+
+    <select id="checkExist" parameterType="com.lister.itms.dao.entity.RoleDO" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM sys_role r WHERE r.role_name = #{roleName,jdbcType=VARCHAR}
+        <if test="roleId != null">
+            r.role_id != #{roleId}
+        </if>
+    </select>
+
+    <select id="getRoleById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM sys_role r WHERE r.role_id = #{roleId,jdbcType=VARCHAR}
+    </select>
+</mapper>

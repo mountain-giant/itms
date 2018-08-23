@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lister.itms.dao.mapper.SysLogMapper" >
+  <resultMap id="BaseResultMap" type="com.lister.itms.dao.entity.SysLogDO" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="log_name" property="logName" jdbcType="VARCHAR" />
+    <result column="log_type" property="logType" jdbcType="INTEGER" />
+    <result column="user" property="user" jdbcType="BIGINT" />
+    <result column="ip" property="ip" jdbcType="VARCHAR" />
+    <result column="path" property="path" jdbcType="VARCHAR" />
+    <result column="log_time" property="logTime" jdbcType="TIMESTAMP" />
+    <result column="result" property="result" jdbcType="CHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR"/>  
+    <result column="time_consuming" property="timeConsuming" jdbcType="BIGINT" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.lister.itms.dao.entity.SysLogDO" extends="BaseResultMap" >
+    <result column="params" property="params" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, log_name, log_type, user, ip, path, log_time, result, time_consuming
+  </sql>
+  <sql id="Blob_Column_List" >
+    params
+  </sql>
+    <select id="countPage" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select  count(*)
+        from sys_log o
+        <where>
+            <if test="value != null and value != ''">
+                AND o.USER = #{value}
+            </if>
+            <if test="startDate != null and startDate !=''">
+                AND o.log_time &gt; #{startDate}
+            </if>
+            <if test="endDate != null and endDate !=''">
+                AND o.log_time &lt; #{endDate}
+            </if>
+        </where>
+    </select>
+    <select id="listPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select  o.id, log_name, log_type, user,o.status, ip,params,result, path, log_time, result, time_consuming,u.login_name AS userName
+        from sys_log o
+        INNER JOIN sys_user u ON o.user = u.id
+        <where>
+            <if test="value != null and value != ''">
+                AND o.USER = #{value}
+            </if>
+            <if test="startDate != null and startDate !=''">
+                AND o.log_time &gt; #{startDate}
+            </if>
+            <if test="endDate != null and endDate !=''">
+                AND o.log_time &lt; #{endDate}
+            </if>
+        </where>
+        ORDER BY o.log_time DESC
+    </select>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from sys_log
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from sys_log
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.lister.itms.dao.entity.SysLogDO" >
+    insert into sys_log (id, log_name, log_type, 
+      user, ip, path, log_time, 
+      result, time_consuming, params,status
+      )
+    values (#{id,jdbcType=INTEGER}, #{logName,jdbcType=VARCHAR}, #{logType,jdbcType=INTEGER}, 
+      #{user,jdbcType=BIGINT}, #{ip,jdbcType=VARCHAR}, #{path,jdbcType=VARCHAR}, #{logTime,jdbcType=TIMESTAMP}, 
+      #{result,jdbcType=CHAR}, #{timeConsuming,jdbcType=BIGINT}, #{params,jdbcType=LONGVARCHAR}, #{status,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.lister.itms.dao.entity.SysLogDO" >
+    insert into sys_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="logName != null" >
+        log_name,
+      </if>
+      <if test="logType != null" >
+        log_type,
+      </if>
+      <if test="user != null" >
+        user,
+      </if>
+      <if test="ip != null" >
+        ip,
+      </if>
+      <if test="path != null" >
+        path,
+      </if>
+      <if test="logTime != null" >
+        log_time,
+      </if>
+      <if test="result != null" >
+        result,
+      </if>
+      <if test="timeConsuming != null" >
+        time_consuming,
+      </if>
+      <if test="params != null" >
+        params,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="logName != null" >
+        #{logName,jdbcType=VARCHAR},
+      </if>
+      <if test="logType != null" >
+        #{logType,jdbcType=INTEGER},
+      </if>
+      <if test="user != null" >
+        #{user,jdbcType=BIGINT},
+      </if>
+      <if test="ip != null" >
+        #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="path != null" >
+        #{path,jdbcType=VARCHAR},
+      </if>
+      <if test="logTime != null" >
+        #{logTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="result != null" >
+        #{result,jdbcType=CHAR},
+      </if>
+      <if test="timeConsuming != null" >
+        #{timeConsuming,jdbcType=BIGINT},
+      </if>
+      <if test="params != null" >
+        #{params,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lister.itms.dao.entity.SysLogDO" >
+    update sys_log
+    <set >
+      <if test="logName != null" >
+        log_name = #{logName,jdbcType=VARCHAR},
+      </if>
+      <if test="logType != null" >
+        log_type = #{logType,jdbcType=INTEGER},
+      </if>
+      <if test="user != null" >
+        user = #{user,jdbcType=BIGINT},
+      </if>
+      <if test="ip != null" >
+        ip = #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="path != null" >
+        path = #{path,jdbcType=VARCHAR},
+      </if>
+      <if test="logTime != null" >
+        log_time = #{logTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="result != null" >
+        result = #{result,jdbcType=CHAR},
+      </if>
+      <if test="timeConsuming != null" >
+        time_consuming = #{timeConsuming,jdbcType=BIGINT},
+      </if>
+      <if test="params != null" >
+        params = #{params,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.lister.itms.dao.entity.SysLogDO" >
+    update sys_log
+    set log_name = #{logName,jdbcType=VARCHAR},
+      log_type = #{logType,jdbcType=INTEGER},
+      user = #{user,jdbcType=BIGINT},
+      ip = #{ip,jdbcType=VARCHAR},
+      path = #{path,jdbcType=VARCHAR},
+      log_time = #{logTime,jdbcType=TIMESTAMP},
+      result = #{result,jdbcType=CHAR},
+      time_consuming = #{timeConsuming,jdbcType=BIGINT},
+      params = #{params,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lister.itms.dao.entity.SysLogDO" >
+    update sys_log
+    set log_name = #{logName,jdbcType=VARCHAR},
+      log_type = #{logType,jdbcType=INTEGER},
+      user = #{user,jdbcType=BIGINT},
+      ip = #{ip,jdbcType=VARCHAR},
+      path = #{path,jdbcType=VARCHAR},
+      log_time = #{logTime,jdbcType=TIMESTAMP},
+      result = #{result,jdbcType=CHAR},
+      time_consuming = #{timeConsuming,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
